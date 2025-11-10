@@ -1,0 +1,45 @@
+name: SPOREX Daily Update
+
+on:
+  schedule:
+    - cron: '30 8 * * *'
+  workflow_dispatch:
+
+jobs:
+  build-and-run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      - name: Run analysis & publish
+        env:
+          THE_ODDS_API_KEY: ${{ secrets.THE_ODDS_API_KEY }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          GIT_EMAIL: ${{ secrets.GIT_EMAIL }}
+          GIT_NAME: ${{ secrets.GIT_NAME }}
+        run: |
+          python backend/analyze_and_publish.py
+
+      - name: Commit generated JSON (if changed)
+        run: |
+          git config --global user.email "${{ secrets.GIT_EMAIL }}"
+          git config --global user.name "${{ secrets.GIT_NAME }}"
+          git add matches_today.json || true
+          if ! git diff --staged --quiet; then
+            git commit -m "Automated update: matches_today.json - $(date -u '+%Y-%m-%d %H:%M:%S UTC')"
+            git push origin HEAD:main
+          else
+            echo "No changes to commit"
+          fi
