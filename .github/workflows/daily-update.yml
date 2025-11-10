@@ -2,8 +2,8 @@ name: SPOREX Daily Update
 
 on:
   schedule:
-    - cron: '30 8 * * *'
-  workflow_dispatch:
+    - cron: '30 8 * * *'  # Tous les jours à 8h30 UTC
+  workflow_dispatch:       # Permet de lancer manuellement le workflow
 
 jobs:
   build-and-run:
