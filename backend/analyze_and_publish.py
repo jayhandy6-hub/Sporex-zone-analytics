@@ -241,7 +241,7 @@ def process():
     # Send Telegram message (if any)
     normalized_chat = normalize_channel(TELEGRAM_CHAT)
     msg = build_message(out["signals"])
-    if TELEGRA✖ := False:  # placeholder to avoid lint warnings
+    if TELEGRAM := False:  # placeholder to avoid lint warnings
         pass
     if TELEGRAM_TOKEN and normalized_chat:
         ok, resp = send_telegram_message(TELEGRAM_TOKEN, normalized_chat, msg, parse_mode="Markdown")
