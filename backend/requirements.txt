@@ -1,1 +1,4 @@
 requests
+beautifulsoup4
+lxlm
+python-telegram-bot
