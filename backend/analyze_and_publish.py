@@ -1,4 +1,4 @@
-# backend/analyze_and_publish.py
+_# backend/analyze_and_publish.py
 # SPOREX STATS - analyse complète & publication Telegram (version finale prototype)
 # Requirements: requests, beautifulsoup4, lxml
 # Env secrets expected:
