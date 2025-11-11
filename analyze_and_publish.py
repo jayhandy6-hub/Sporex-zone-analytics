@@ -6,7 +6,7 @@ from fetch_sofascore import get_team_summary
 MIN_PROB = 0.80
 OUTFILE = "matches_today.json"
 TELEGRAM_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN")
-TELEGRAM_CHAT_ID = os.environ.get("TELEGRAM_CHAT_ID")
+TELEGRAM_CHAT = os.environ.get("TELEGRAM_CHAT")
 
 def decimal_to_prob(odd):
     try:
@@ -74,7 +74,7 @@ def process():
     with open(OUTFILE, "w", encoding="utf-8") as f:
         json.dump(output, f, ensure_ascii=False, indent=2)
 
-    if TELEGRAM_TOKEN and TELEGRAM_CHAT_ID and output["signals"]:
+    if TELEGRAM_TOKEN and TELEGRAM_CHAT and output["signals"]:
         text = "🔥 SPOREX STATS – Signaux du jour (≥80%)\n\n"
         for s in output["signals"]:
             text += f"⚽ {s['home']} vs {s['away']} ({s['league']}) — {int(s['p_model']*100)}% — cote ≈ {s['avg_odd']}\n"
@@ -84,7 +84,7 @@ def process():
 
 def send_telegram(text):
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendMessage"
-    payload = {"chat_id": TELEGRAM_CHAT_ID, "text": text}
+    payload = {"chat_id": TELEGRAM_CHAT, "text": text}
     r = requests.post(url, json=payload, timeout=10)
     print("Telegram:", r.status_code, r.text)
 
